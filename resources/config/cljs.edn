@@ -1,11 +1,11 @@
-{:ns-prefix   "scattergories"
+{:ns-prefix   "acme"
  :ignore-errors ["goog/i18n/bidi.js"]
  :env-keys    ["cc.env" "CC_ENV"]
  :run-cmd     "node resources/public/specs/speclj.js"
  :development {:cache-analysis true
                :optimizations  :none
                :output-dir     "resources/public/cljs/"
-               :output-to      "resources/public/cljs/scattergories_dev.js"
+               :output-to      "resources/public/cljs/acme_dev.js"
                :pretty-print   true
                :source-map     true
                :sources        ["spec/cljc" "spec/cljs" "src/cljc" "src/cljs"]
@@ -16,11 +16,11 @@
                }
  :production  {
                :cache-analysis false
-               :externs        ["dev/scattergories/externs/gapi.js"]
+               :externs        ["dev/acme/externs/gapi.js"]
                :infer-externs  true
                :optimizations  :advanced
                :output-dir     "resources/public/cljs/"
-               :output-to      "resources/public/cljs/scattergories.js"
+               :output-to      "resources/public/cljs/acme.js"
                :pretty-print   false
                :sources        ["src/cljc" "src/cljs"]
                :specs          false
@@ -31,7 +31,7 @@
                :infer-externs  true
                :optimizations  :whitespace
                :output-dir     "resources/public/cljs/"
-               :output-to      "resources/public/cljs/scattergories.js"
+               :output-to      "resources/public/cljs/acme.js"
                :pretty-print   true
                :pseudo-names   true
                :sources        ["src/cljc" "src/cljs"]

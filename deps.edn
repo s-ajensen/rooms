@@ -29,17 +29,17 @@
                                       }
                         ;:override-deps {com.cleancoders.c3kit/wire {:local/root "../../cleancoders/c3kit/wire"}}
                         :extra-paths ["dev" "spec/clj" "spec/cljc" "spec/cljs"]}
-             :clean-db {:main-opts ["-m" "scattergories.clean-dev-db"]}
+             :clean-db {:main-opts ["-m" "acme.clean-dev-db"]}
              :cljs     {:main-opts ["-m" "c3kit.scaffold.cljs"]}
              :css      {:main-opts ["-m" "c3kit.scaffold.css"]}
-             :dev      {:main-opts ["-m" "scattergories.dev"]}
-             :dev-     {:main-opts ["-m" "scattergories.dev" "cljs" "css"]}
-             :cljss    {:main-opts ["-m" "scattergories.dev" "cljs" "css"]}
+             :dev      {:main-opts ["-m" "acme.dev"]}
+             :dev-     {:main-opts ["-m" "acme.dev" "cljs" "css"]}
+             :cljss    {:main-opts ["-m" "acme.dev" "cljs" "css"]}
              :migrate  {:main-opts ["-m" "c3kit.bucket.migration"]}
-             :repl     {:main-opts ["-e" "(require,'scattergories.repl)" "-e" "(in-ns,'scattergories.repl)" "--repl"] :extra-paths ["dev"]}
-             :run      {:main-opts ["-m" "scattergories.main"]}
-             :seed     {:main-opts ["-m" "scattergories.seed"] :extra-paths ["dev"]}
-             :server   {:jvm-opts ["-Xmx1g" "-server"] :main-opts ["-m" "scattergories.main"]}
+             :repl     {:main-opts ["-e" "(require,'acme.repl)" "-e" "(in-ns,'acme.repl)" "--repl"] :extra-paths ["dev"]}
+             :run      {:main-opts ["-m" "acme.main"]}
+             :seed     {:main-opts ["-m" "acme.seed"] :extra-paths ["dev"]}
+             :server   {:jvm-opts ["-Xmx1g" "-server"] :main-opts ["-m" "acme.main"]}
              :spec     {:main-opts ["-m" "speclj.main" "-c"]}
              }
  }

@@ -14,7 +14,7 @@ const fs = require("fs");
 var autoArg = process.argv.pop();
 var timestampFile = path.resolve(__dirname, "../../../.specljs-timestamp");
 var specsHTMLFile = path.resolve(__dirname, "specs.html");
-var nsPrefix = "scattergories"
+var nsPrefix = "acme"
 
 function lastModified(filepath) {
   try {

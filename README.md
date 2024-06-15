@@ -1,4 +1,5 @@
-# Scattergories
+# rooms
+## A template for websocket-based rooms in Clojure
 
 ### Setup
 #### System Requirements 
