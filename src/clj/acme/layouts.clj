@@ -1,7 +1,5 @@
 (ns acme.layouts
   (:require [acme.config :as config]
-            [acme.layoutc :as layoutc]
-            [c3kit.apron.legend :as legend]
             [c3kit.apron.utilc :as utilc]
             [c3kit.wire.api :as api]
             [c3kit.wire.assets :refer [add-fingerprint]]
@@ -13,18 +11,7 @@
             [ring.util.response :as response]))
 
 (def default-title "acme")
-(def default-description "The acme App")
-(def default-image "/images/logos/cc-emblem.png")
 (defn title [options] (or (:title options) default-title))
-
-(defn social-meta [options]
-  (list
-    [:meta {:property "og:url" :content (or (:og/url options) (str config/host "/"))}]
-    [:meta {:property "og:title" :content (or (:og/title options) (title options))}]
-    [:meta {:property "og:description" :content (or (:og/description options) default-description)}]
-    [:meta {:property "og:image" :content (or (:og/image options) default-image)}]
-    [:meta {:name "twitter:card" :content "summary"}]
-    [:meta {:name "twitter:site" :content "@thecleancoders"}]))
 
 (defn default
   ([body] (default body {}))
@@ -35,7 +22,6 @@
             [:title (title options)]
             [:meta {:charset "utf-8"}]
             [:meta {:name "viewport" :content "width=device-width, initial-scale=1.0, minimum-scale=1.0"}]
-            (social-meta options)
             [:link {:rel "icon" :sizes "16x16" :type "image/png" :href "/images/favicons/favicon-16x16.png"}]
             [:link {:rel "icon" :sizes "32x32" :type "image/png" :href "/images/favicons/favicon-32x32.png"}]
             [:link {:rel "icon" :sizes "192x192" :type "image/png" :href "/images/favicons/favicon-192x192.png"}]

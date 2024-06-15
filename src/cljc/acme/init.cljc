@@ -8,13 +8,12 @@
             [c3kit.wire.api :as api]
             [acme.config :as config]
             [acme.schema.full :as schema]
-            [acme.schema.player :as player]
+            [acme.schema.occupant :as occupant]
             [acme.schema.room :as room]))
 
 (defn install-legend! []
   (legend/init! {:room       room/room
-                 :answer     player/answer
-                 :player     player/player
+                 :occupant   occupant/occupant
                  :db/retract legend/retract
                  }))
 

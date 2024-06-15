@@ -1,6 +1,5 @@
 (ns acme.routes
   (:require [acme.config :as config]
-            [c3kit.apron.corec :as ccc]
             [c3kit.apron.util :as util]
             [c3kit.wire.ajax :as ajax]
             [clojure.string :as str]
@@ -59,26 +58,12 @@
    :room/create         'acme.room/ws-create-room
    :room/join           'acme.room/ws-join-room
    :room/fetch          'acme.room/ws-fetch-room
-   :game/start          'acme.game/ws-start-game
-   :game/submit-answers 'acme.game/ws-submit-answers
-   :game/update-answer  'acme.game/ws-update-answer
-   :game/next-category  'acme.game/ws-next-category
    })
-
-(defn sleep-for-10 [] (Thread/sleep 10000))
-(defn spinner [_]
-  (sleep-for-10)
-  (ajax/ok {} nil))
 
 (def ajax-routes-handler
   (-> (lazy-routes
         {
-         ;["/forgot-password" :post]  acme.auth/ajax-forgot-password
-         ;["/recover-password" :post] acme.auth/ajax-recover-password
-         ["/spinner" :get]    acme.routes/spinner
          ["/csrf-token" :get] acme.auth/ajax-csrf-token
-         ;["/user/csrf-token" :get]   acme.auth/ajax-csrf-token
-         ;["/user/signin" :post]      acme.auth/ajax-login
          })
     (wrap-prefix "/api" ajax/api-not-found-handler)
     ajax/wrap-ajax))
@@ -88,26 +73,10 @@
     {
      ["/" :get]               acme.layouts/web-rich-client
      ["/room/:code" :get]     acme.layouts/web-rich-client
-     ;["/error" :any]                            acme.errors/web-error
-     ;["/forgot-password" :get]                  acme.layouts/web-rich-client
-     ;["/recover-password/:recovery-token" :get] acme.layouts/web-rich-client
-     ;["/signout" :any]                          acme.auth/web-signout
-     ;["/signout/:reason" :any]                  acme.auth/web-signout
      ["/user/websocket" :any] acme.auth/websocket-open
-     }))
-
-(def dev-handler
-  (lazy-routes
-    {
-     ;["/sandbox" :get]                 acme.sandbox.core/index
-     ;["/sandbox/" :get]                acme.sandbox.core/index
-     ;["/sandbox/:page" :get]           acme.sandbox.core/handler
-     ;["/sandbox/:page/:ns" :get]       acme.sandbox.core/handler
-     ;["/sandbox/:page/:ns1/:ns2" :get] acme.sandbox.core/handler
      }))
 
 (defroutes handler
            ajax-routes-handler
            web-routes-handlers
-           (if config/production? ccc/noop dev-handler)
            )

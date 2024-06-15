@@ -1,6 +1,5 @@
 (ns acme.dispatch
-  (:require [c3kit.apron.corec :as ccc]
-            [c3kit.wire.websocket :as ws]
+  (:require [c3kit.wire.websocket :as ws]
             [clojure.set :as set]))
 
 (defn- push-to-connections! [conn-ids method data]
@@ -8,8 +7,8 @@
     (doseq [uid (set/intersection (ws/connected-ids) (set conn-ids))]
       (ws/push! uid method data))))
 
-(defn push-to-player! [player method data]
-  (push-to-connections! [(:conn-id player)] method data))
+(defn push-to-occupant! [occupant method data]
+  (push-to-connections! [(:conn-id occupant)] method data))
 
-(defn push-to-players! [players method data]
-  (push-to-connections! (map :conn-id players) method data))
+(defn push-to-occupants! [occupants method data]
+  (push-to-connections! (map :conn-id occupants) method data))

@@ -24,10 +24,6 @@
   (wjs/page-title= (page/title page))
   (page/install-page! page))
 
-(defn sandbox-routes []
-  (defroute "/sandbox/:page" [page] (load-page! (keyword (str "sandbox/" page))))
-  )
-
 (defn app-routes []
   (secretary/set-config! :prefix "")
 

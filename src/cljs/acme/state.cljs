@@ -4,4 +4,4 @@
 
 (def nickname (reagent/atom nil))
 (def room (reagent/track #(db/ffind :room)))
-(def players (reagent/track #(map db/entity (:players @room))))
+(def occupants (reagent/track #(map db/entity (:occupants @room))))

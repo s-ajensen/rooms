@@ -46,36 +46,15 @@
   ; TODO - fixme
   (test-route "/" :get acme.layouts/web-rich-client)
   (test-route "/room/shrine" :get acme.layouts/web-rich-client)
-  ;(test-route "/forgot-password" :get acme.layouts/web-rich-client)
-  ;(test-route "/recover-password/foo" :get acme.layouts/web-rich-client)
-  ;(test-route "/sandbox/example-page" :get acme.sandbox.core/handler)
-  ;(test-route "/signout" :any acme.auth/web-signout)
-  ;(test-route "/user/websocket" :any acme.auth/websocket-open)
-
-  ;; ajax routes
-  ;(test-route "/ajax/forgot-password" :post acme.auth/ajax-forgot-password)
-  ;(test-route "/ajax/recover-password" :post acme.auth/ajax-recover-password)
-  ;(test-route "/ajax/spinner" :get acme.routes/spinner)
-  ;(test-route "/ajax/user/csrf-token" :get acme.auth/ajax-csrf-token)
-  ;(test-route "/ajax/user/signin" :post acme.auth/ajax-login)
 
   ;; websocket handlers
   (test-webs :ws/close             acme.room/ws-leave-room)
   (test-webs :room/create          acme.room/ws-create-room)
   (test-webs :room/join            acme.room/ws-join-room)
   (test-webs :room/fetch           acme.room/ws-fetch-room)
-  (test-webs :game/start           acme.game/ws-start-game)
-  (test-webs :game/submit-answers  acme.game/ws-submit-answers)
-  (test-webs :game/update-answer   acme.game/ws-update-answer)
-  (test-webs :game/next-category   acme.game/ws-next-category)
 
   (it "not-found global - nil - handled by http"
     (let [response (routes/handler {:uri "/blah" :request-method :get})]
       (should-be-nil response)))
-
-  (it "spinner"
-    (with-redefs [routes/sleep-for-10 (stub :sleep)]
-      (wire-helper/should-be-ajax-ok (routes/spinner :blah) nil)
-      (should-have-invoked :sleep)))
 
   )

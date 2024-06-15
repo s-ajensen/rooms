@@ -68,6 +68,7 @@
       wrap-head
       ))
 
+; TODO - grab port from config instead
 (defn start [app]
   (let [port (or (some-> "PORT" System/getenv Integer/parseInt) 8123)]
     (log/info (str "Starting HTTP server: http://localhost:" port))

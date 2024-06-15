@@ -3,7 +3,7 @@
             [c3kit.wire.apic :as apic]
             ;[acme.categories :as categories]
             [acme.dispatch :as dispatch]
-            [acme.playerc :as playerc]
+            [acme.occupantc :as occupantc]
             [acme.roomc :as roomc]))
 
 (def lock (Object.))
@@ -44,24 +44,24 @@
 
 (defn ws-fetch-room [{:keys [params] :as request}]
   (let [room (db/ffind-by :room :code (:room-code params))
-        players (map db/entity (:players room))]
+        occupants (map db/entity (:occupants room))]
     (or (maybe-missing-room params)
         (maybe-nonexistent-room room)
-        (apic/ok (cons room players)))))
+        (apic/ok (cons room occupants)))))
 
 (defn push-to-room! [room payload]
-  (let [players (map db/entity (:players room))]
-    (dispatch/push-to-players! players :room/update payload)))
+  (let [occupants (map db/entity (:occupants room))]
+    (dispatch/push-to-occupants! occupants :room/update payload)))
 
 (defn push-room! [room]
   (push-to-room! room [room]))
 
 (defn- create-and-join! [room nickname connection-id]
-  (let [player (playerc/create-player! nickname connection-id)
-        room   (roomc/join-room! room player)
-        players (map db/entity (:players room))]
-    (push-to-room! room [room player])
-    (apic/ok (cons room players))))
+  (let [occupant (occupantc/create-occupant! nickname connection-id)
+        room   (roomc/add-occupant! room occupant)
+        occupants (map db/entity (:occupants room))]
+    (push-to-room! room [room occupant])
+    (apic/ok (cons room occupants))))
 
 (defn- assign-to-room! [{:keys [room-code nickname]} connection-id]
   (let [room (db/ffind-by :room :code room-code)]
@@ -76,8 +76,8 @@
 
 (defn ws-leave-room [{:keys [connection-id] :as request}]
   (with-lock
-    (when-let [player (playerc/by-conn-id connection-id)]
-      (let [room      (roomc/by-player player)
-            room      (roomc/leave-room! room player)]
+    (when-let [occupant (occupantc/by-conn-id connection-id)]
+      (let [room      (roomc/by-occupant occupant)
+            room      (roomc/remove-occupant! room occupant)]
         (push-room! room)
-        (roomc/leave-room! room player)))))
+        (roomc/remove-occupant! room occupant)))))
