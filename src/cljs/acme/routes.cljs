@@ -4,7 +4,8 @@
             [acme.page :as page]
             [c3kit.apron.log :as log]
             [c3kit.wire.js :as wjs]
-            [secretary.core :as secretary]))
+            [secretary.core :as secretary]
+            [acme.room :as room]))
 
 (defn dispatch! [uri]
   (log/debug "dispatching: " uri)
@@ -29,7 +30,7 @@
 
   (defroute "/" [] (load-page! :home))
   (defroute "/room/:code" [code]
-    (page/install-room! code)
+    (room/install-room! code)
     (load-page! :room))
 
   (hook-browser-navigation!))

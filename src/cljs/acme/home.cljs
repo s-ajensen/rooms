@@ -1,6 +1,8 @@
 (ns acme.home
   (:require [accountant.core :as accountant]
+            [acme.occupant :as occupant]
             [c3kit.apron.corec :as ccc]
+            [c3kit.bucket.api :as db]
             [c3kit.wire.js :as wjs]
             [c3kit.wire.websocket :as ws]
             [clojure.string :as str]
@@ -8,7 +10,8 @@
             [acme.page :as page]))
 
 (defn join-room! [[code]]
-  (ws/call! :room/join {:nickname @state/nickname :room-code code} ccc/noop)
+  (ws/call! :room/join {:nickname @state/nickname :room-code code}
+            occupant/receive-join!)
   (accountant/navigate! (str "/room/" code)))
 
 (defn- create-room! [nickname]

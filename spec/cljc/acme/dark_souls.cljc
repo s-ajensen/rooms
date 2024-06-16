@@ -11,7 +11,7 @@
 (def schemas [room.schema/all
               occupant.schema/all])
 
-(def shrine-code "shrine")
+(def firelink-code "shrine")
 (def depths-code "depths")
 
 (def firelink-atom (atom nil))
@@ -33,7 +33,7 @@
 (def depths (Entity. depths-atom))                          ;; an empty room
 
 (defn init []
-  (reset! firelink-atom (roomc/create-room! shrine-code))
+  (reset! firelink-atom (roomc/create-room! firelink-code))
   (reset! depths-atom (roomc/create-room! depths-code))
   (reset! lautrec-atom (db/tx (occuantc/->occupant "Lautrec" "conn-lautrec")))
   (reset! frampt-atom (db/tx (occuantc/->occupant "Kingseeker Frampt" "conn-frampt")))

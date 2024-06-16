@@ -5,14 +5,21 @@
             [clojure.string :as str]
             [reagent.core :as reagent]
             [c3kit.bucket.api :as db]
-            [acme.page :as page]
-            [acme.state :as state]))
+            [acme.occupant :as occupant]
+            [acme.page :as page]))
 
-(defn- join-room! []
-  (when (not (str/blank? @state/nickname))
+(def room-state (page/cursor [:room] {}))
+(defn install-room! [code]
+  (swap! room-state assoc :code code))
+(def code (reagent/track #(:code @room-state)))
+(def room (reagent/track #(db/ffind-by :room :code @code)))
+(def occupants (reagent/track #(map db/entity (:occupants @room))))
+
+(defn- join-room! [nickname]
+  (when (not (str/blank? nickname))
     (ws/call! :room/join
-              {:nickname @state/nickname :room-code (:room-code @page/state)}
-              db/tx*)))
+              {:nickname nickname :room-code @code}
+              occupant/receive-join!)))
 
 (defn nickname-prompt [_]
   (let [local-nickname-ratom (reagent/atom nil)]
@@ -27,18 +34,16 @@
                  :value @local-nickname-ratom
                  :on-change #(reset! local-nickname-ratom (wjs/e-text %))}]
         [:button {:id "-join-button"
-                  :on-click #(do (reset! nickname-ratom @local-nickname-ratom)
-                                 (join-room!))}
+                  :on-click #(join-room! @local-nickname-ratom)}
          "Join"]]])))
 
-
-(defn room [occupants-ratom]
+(defn room-component [occupants-ratom]
   [:div.main-container
    {:id "-room"}
    [:div.left-container
     [:br]
     [:br]
-    [:h3 "occupants"]
+    [:h3 "Occupants"]
     [:ul
      [:<>
       (ccc/for-all [occupant @occupants-ratom]
@@ -55,15 +60,15 @@
   [:div {:id "-prompt-or-room"}
    (if (str/blank? @nickname-ratom)
      [nickname-prompt nickname-ratom]
-     [room state/occupants])])
+     [room-component occupants])])
 
 (defn- fetch-room []
   (ws/call! :room/fetch
-            {:room-code (:room-code @page/state)}
+            {:room-code @code}
             db/tx*))
 
 (defmethod page/entering! :room [_]
   (fetch-room))
 
 (defmethod page/render :room [_]
-  [nickname-prompt-or-room state/nickname])
+  [nickname-prompt-or-room occupant/nickname])

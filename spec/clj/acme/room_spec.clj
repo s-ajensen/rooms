@@ -70,7 +70,7 @@
           (should= "conn-rat" (:conn-id occupant)))))
 
     (it "notifies occupants of new room state"
-      (let [response (sut/ws-join-room {:params        {:nickname "Giant Crow" :room-code ds/shrine-code}
+      (let [response (sut/ws-join-room {:params        {:nickname "Giant Crow" :room-code ds/firelink-code}
                                         :connection-id "conn-crow"})
             crow     (occupantc/by-nickname "Giant Crow")]
         (should= :ok (:status response))
@@ -79,7 +79,7 @@
                                                        [@firelink crow]]})))
 
     (it "responds with current room state & all current occupants"
-      (let [response (sut/ws-join-room {:params        {:nickname "Giant Crow" :room-code ds/shrine-code}
+      (let [response (sut/ws-join-room {:params        {:nickname "Giant Crow" :room-code ds/firelink-code}
                                         :connection-id "conn-crow"})
             crow     (occupantc/by-nickname "Giant Crow")]
         (should= :ok (:status response))

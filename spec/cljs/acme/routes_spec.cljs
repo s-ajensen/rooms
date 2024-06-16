@@ -4,6 +4,7 @@
   (:require [acme.page :as page]
             [acme.routes :as sut]
             [secretary.core :as secretary]
+            [acme.room :as room]
             [speclj.core]))
 
 (describe "Routes"
@@ -16,7 +17,7 @@
 
   (it-routes "/" :home)
   (it-routes "/room/shrine" :room
-             (should= "shrine" (:room-code @page/state)))
+             (should= "shrine" @room/code))
   (it-routes "/room/depths" :room
-             (should= "depths" (:room-code @page/state)))
+             (should= "depths" @room/code))
   )

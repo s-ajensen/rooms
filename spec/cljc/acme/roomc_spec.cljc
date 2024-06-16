@@ -13,8 +13,8 @@
   (context "create-room!"
 
     (it "assigns code"
-      (sut/create-room! ds/shrine-code)
-      (should= ds/shrine-code (:code (db/ffind-by :room :code ds/shrine-code)))))
+      (sut/create-room! ds/firelink-code)
+      (should= ds/firelink-code (:code (db/ffind-by :room :code ds/firelink-code)))))
 
   (context "add-occupant"
 

@@ -1,6 +1,7 @@
 (ns acme.home-spec
   (:require-macros [speclj.core :refer [around stub should-have-invoked should-not-have-invoked with-stubs describe context it should= should-be-nil should-contain should should-not before should-not-be-nil]])
   (:require [accountant.core :as accountant]
+            [acme.occupant :as occupant]
             [c3kit.apron.corec :as ccc]
             [c3kit.wire.js :as wjs]
             [acme.dark-souls :as ds]
@@ -27,7 +28,7 @@
       (sut/join-room! ["UK2LLJ"])
       (should-have-invoked :ws/call! {:with [:room/join
                                              {:nickname "Lautrec" :room-code "UK2LLJ"}
-                                             ccc/noop]})
+                                             occupant/receive-join!]})
       (should-have-invoked :redirect! {:with ["/room/UK2LLJ"]})))
 
   (context "nickname input"
