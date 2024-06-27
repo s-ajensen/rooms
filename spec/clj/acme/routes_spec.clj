@@ -52,6 +52,7 @@
   (test-webs :room/create          acme.room/ws-create-room)
   (test-webs :room/join            acme.room/ws-join-room)
   (test-webs :room/fetch           acme.room/ws-fetch-room)
+  (test-webs :game/inc-counter     acme.game/ws-inc-counter)
 
   (it "not-found global - nil - handled by http"
     (let [response (routes/handler {:uri "/blah" :request-method :get})]

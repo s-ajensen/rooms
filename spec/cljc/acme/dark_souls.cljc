@@ -1,15 +1,11 @@
 (ns acme.dark-souls
-  (:require [c3kit.bucket.api :as db]
+  (:require [acme.schema.full :as schema]
+            [c3kit.bucket.api :as db]
             [c3kit.bucket.spec-helperc :as helperc]
             [acme.occupantc :as occuantc]
             [acme.roomc :as roomc]
-            [acme.schema.room :as room.schema]
-            [acme.schema.occupant :as occupant.schema]
             [speclj.core #?(:clj :refer :cljs :refer-macros) [before]])
   #?(:clj (:import (clojure.lang IDeref))))
-
-(def schemas [room.schema/all
-              occupant.schema/all])
 
 (def firelink-code "shrine")
 (def depths-code "depths")
@@ -20,6 +16,7 @@
 (def patches-atom (atom nil))
 (def laurentius-atom (atom nil))
 (def depths-atom (atom nil))
+(def dark-souls-atom (atom nil))
 
 (deftype Entity [atm]
   #?(:clj IDeref :cljs cljs.core/IDeref)
@@ -31,6 +28,7 @@
 (def patches (Entity. patches-atom))                        ;; a occupant at firelink
 (def laurentius (Entity. laurentius-atom))                  ;; a occupant who hasn't joined
 (def depths (Entity. depths-atom))                          ;; an empty room
+(def dark-souls (Entity. dark-souls-atom))                  ;; a game for firelink
 
 (defn init []
   (reset! firelink-atom (roomc/create-room! firelink-code))
@@ -39,12 +37,13 @@
   (reset! frampt-atom (db/tx (occuantc/->occupant "Kingseeker Frampt" "conn-frampt")))
   (reset! patches-atom (db/tx (occuantc/->occupant "Patches" "conn-patches")))
   (reset! laurentius-atom (db/tx (occuantc/->occupant "Laurentius" "conn-laurentius")))
+  (reset! dark-souls-atom (db/tx {:kind :game :room (:id @firelink) :counter 0}))
   (roomc/add-occupant! @firelink @lautrec)
   (roomc/add-occupant! @firelink @frampt)
   (roomc/add-occupant! @firelink @patches))
 
 (defn with-schemas
-  ([] (with-schemas schemas))
+  ([] (with-schemas schema/full-schema))
   ([& schemas] (helperc/with-schemas schemas)))
 
 (defn init-with-schemas []

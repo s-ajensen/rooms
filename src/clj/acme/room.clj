@@ -1,7 +1,7 @@
 (ns acme.room
   (:require [c3kit.bucket.api :as db]
             [c3kit.wire.apic :as apic]
-            ;[acme.categories :as categories]
+    ;[acme.categories :as categories]
             [acme.dispatch :as dispatch]
             [acme.occupantc :as occupantc]
             [acme.roomc :as roomc]))
@@ -13,13 +13,13 @@
 
 (def code-chars
   (->> (concat (range 48 58) (range 65 91))
-    (map char)
-    (remove #{\O \0 \1 \I \G \g})))
+       (map char)
+       (remove #{\O \0 \1 \I \G \g})))
 
 (defn new-code []
   (->> (repeatedly #(rand-nth code-chars))
-    (take 6)
-    (apply str)))
+       (take 6)
+       (apply str)))
 
 (defn unused-code []
   (->> (repeatedly new-code)
@@ -49,16 +49,19 @@
         (maybe-nonexistent-room room)
         (apic/ok (cons room occupants)))))
 
-(defn push-to-room! [room payload]
-  (let [occupants (map db/entity (:occupants room))]
-    (dispatch/push-to-occupants! occupants :room/update payload)))
+(defn push-to-room!
+  ([room payload]
+   (push-to-room! room payload :room/update))
+  ([room payload method]
+   (let [occupants (map db/entity (:occupants room))]
+     (dispatch/push-to-occupants! occupants method payload))))
 
 (defn push-room! [room]
   (push-to-room! room [room]))
 
 (defn- create-and-join! [room nickname connection-id]
   (let [occupant (occupantc/create-occupant! nickname connection-id)
-        room   (roomc/add-occupant! room occupant)
+        room (roomc/add-occupant! room occupant)
         occupants (map db/entity (:occupants room))]
     (push-to-room! room [room occupant])
     (apic/ok (cons room occupants))))
@@ -77,7 +80,7 @@
 (defn ws-leave-room [{:keys [connection-id] :as request}]
   (with-lock
     (when-let [occupant (occupantc/by-conn-id connection-id)]
-      (let [room      (roomc/by-occupant occupant)
-            room      (roomc/remove-occupant! room occupant)]
+      (let [room (roomc/by-occupant occupant)
+            room (roomc/remove-occupant! room occupant)]
         (push-room! room)
         (roomc/remove-occupant! room occupant)))))

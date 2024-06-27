@@ -58,6 +58,7 @@
    :room/create         'acme.room/ws-create-room
    :room/join           'acme.room/ws-join-room
    :room/fetch          'acme.room/ws-fetch-room
+   :game/inc-counter    'acme.game/ws-inc-counter
    })
 
 (def ajax-routes-handler
