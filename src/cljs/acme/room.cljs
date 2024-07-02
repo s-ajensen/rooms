@@ -45,11 +45,10 @@
     [:br]
     [:h3 "Occupants"]
     [:ul
-     [:<>
-      (ccc/for-all [occupant @occupants-ratom]
-        [:li {:key (:id occupant)
-              :id  (str "-occupant-" (:id occupant))}
-         (:nickname occupant)])]]]
+     (ccc/for-all [occupant @occupants-ratom]
+       [:li {:key (:id occupant)
+             :id  (str "-occupant-" (:id occupant))}
+        (:nickname occupant)])]]
    [:div.center
     [:div.game-container
      [:h1 "acme"]

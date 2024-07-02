@@ -10,9 +10,7 @@
   (db/tx (:params push)))
 
 (defn game []
-  (fn []
-    (prn "(db/ffind :game): " (db/ffind :game))
-    [:div#-game-container
-     [:p#-counter (:counter @current)]
-     [:button#-inc-btn
-      {:on-click #(ws/call! :game/inc-counter [] ccc/noop)}]]))
+  [:div#-game-container
+   [:p#-counter (:counter @current)]
+   [:button#-inc-btn
+    {:on-click #(ws/call! :game/inc-counter [] ccc/noop)}]])

@@ -36,8 +36,7 @@
     (wire/click! "#-inc-btn")
     (should-have-invoked-ws :game/inc-counter [] ccc/noop))
 
-  #_(it "receives game update"
+  (it "receives game update"
     (ws/push-handler {:kind :game/update :params (update @ds/dark-souls :counter inc)})
     (wire/flush)
-    (prn "@sut/current: " @sut/current)
     (should= "1" (wire/text "#-counter"))))

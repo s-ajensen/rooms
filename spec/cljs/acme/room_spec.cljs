@@ -74,11 +74,11 @@
     (context "displays occupants"
 
       (it "with one occupant"
-        (let [frampt @ds/frampt]
+        (let [lautrec @ds/lautrec]
           (run! db/delete (db/find :occupant))
-          (db/tx frampt)
+          (db/tx lautrec)
           (wire/flush)
-          (should= "Kingseeker Frampt" (wire/html (str "#-occupant-" (:id frampt))))))
+          (should= "Lautrec" (wire/html (str "#-occupant-" (:id lautrec))))))
 
       (it "with multiple occupants"
         (should= "Lautrec" (wire/html (str "#-occupant-" (:id @ds/lautrec-atom))))

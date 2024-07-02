@@ -4,6 +4,7 @@
             [c3kit.bucket.spec-helperc :as helperc]
             [acme.occupantc :as occuantc]
             [acme.roomc :as roomc]
+            [reagent.core :as reagent]
             [speclj.core #?(:clj :refer :cljs :refer-macros) [before]])
   #?(:clj (:import (clojure.lang IDeref))))
 
@@ -42,9 +43,11 @@
   (roomc/add-occupant! @firelink @frampt)
   (roomc/add-occupant! @firelink @patches))
 
+(def memory-config {:impl :memory :store #?(:clj (atom nil) :cljs (reagent/atom nil))})
+
 (defn with-schemas
   ([] (with-schemas schema/full-schema))
-  ([& schemas] (helperc/with-schemas schemas)))
+  ([& schemas] (helperc/with-schemas memory-config schemas)))
 
 (defn init-with-schemas []
   (list (with-schemas)
