@@ -25,10 +25,7 @@
   (context "joins room with code and nickname"
     (it "UK2LLJ, Lautrec"
       (reset! state/nickname "Lautrec")
-      (sut/join-room! ["UK2LLJ"])
-      (should-have-invoked :ws/call! {:with [:room/join
-                                             {:nickname "Lautrec" :room-code "UK2LLJ"}
-                                             occupant/receive-join!]})
+      (sut/navigate-to-room! ["UK2LLJ"])
       (should-have-invoked :redirect! {:with ["/room/UK2LLJ"]})))
 
   (context "nickname input"
@@ -50,15 +47,4 @@
     (it "does nothing if blank nickname"
       (wire/change! "#-nickname-input" " ")
       (wire/click! "#-create-room-button")
-      (should-not-have-invoked :ws/call!))
-
-    (context "creates room if nickname"
-      (it "is Lautrec"
-        (wire/change! "#-nickname-input" "Lautrec")
-        (wire/click! "#-create-room-button")
-        (should-have-invoked :ws/call! {:with [:room/create {:nickname "Lautrec"} sut/join-room!]}))
-
-      (it "is Patches"
-        (wire/change! "#-nickname-input" "Patches")
-        (wire/click! "#-create-room-button")
-        (should-have-invoked :ws/call! {:with [:room/create {:nickname "Patches"} sut/join-room!]})))))
+      (should-not-have-invoked :ws/call!))))

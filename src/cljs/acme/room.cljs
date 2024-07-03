@@ -1,5 +1,6 @@
 (ns acme.room
   (:require [acme.game :as game]
+            [acme.state :as state]
             [c3kit.apron.corec :as ccc]
             [c3kit.wire.js :as wjs]
             [c3kit.wire.websocket :as ws]
@@ -16,7 +17,7 @@
 (def room (reagent/track #(db/ffind-by :room :code @code)))
 (def occupants (reagent/track #(map db/entity (:occupants @room))))
 
-(defn- join-room! [nickname]
+(defn- maybe-join-room! [nickname]
   (when (not (str/blank? nickname))
     (ws/call! :room/join
               {:nickname nickname :room-code @code}
@@ -35,7 +36,7 @@
                  :value @local-nickname-ratom
                  :on-change #(reset! local-nickname-ratom (wjs/e-text %))}]
         [:button {:id "-join-button"
-                  :on-click #(join-room! @local-nickname-ratom)}
+                  :on-click #(maybe-join-room! @local-nickname-ratom)}
          "Join"]]])))
 
 (defn- fetch-game []
@@ -60,8 +61,7 @@
         [:div.center
          [:div.game-container
           [:h1 "acme"]
-          (game/game)
-          ]]])}))
+          (game/game)]]])}))
 
 (defn nickname-prompt-or-room [nickname-ratom]
   [:div {:id "-prompt-or-room"}
@@ -72,13 +72,20 @@
 (defn maybe-not-found []
   (if @room
     [nickname-prompt-or-room occupant/nickname]
-    [:p#-not-found "Oops, that room was not found!"]))
+    [:p#-not-found "Oops, we can't find your room..."]))
 
 (defn- fetch-room []
   (ws/call! :room/fetch {:room-code @code} db/tx*))
 
 (defmethod page/entering! :room [_]
+  (db/tx* (map db/soft-delete (db/find :room)))
+  (db/tx* (map db/soft-delete (db/find :game)))
+  (maybe-join-room! @state/nickname)
   (fetch-room))
+
+(defmethod page/exiting! :room [_]
+  (reset! room-state {})
+  (ws/call! :room/leave {} ccc/noop))
 
 (defmethod page/render :room [_]
   [maybe-not-found])

@@ -3,6 +3,7 @@
                    [c3kit.wire.spec-helperc :refer [should-not-select should-select]])
   (:require [accountant.core :as accountant]
             [acme.occupant :as occupant]
+            [c3kit.apron.corec :as ccc]
             [c3kit.wire.js :as wjs]
             [reagent.core :as reagent]
             [acme.dark-souls :as ds]
@@ -36,9 +37,45 @@
           (wire/render [layout/default]))
 
 
-  (it "fetches room on enter"
-    (load-room! @ds/firelink)
-    (should-have-invoked :ws/call! {:with [:room/fetch {:room-code ds/firelink-code} db/tx*]}))
+
+
+  (context "on enter"
+    (before (routes/load-page! nil))
+
+    (it "fetches room"
+      (load-room! @ds/firelink)
+      (should-have-invoked :ws/call! {:with [:room/fetch {:room-code ds/firelink-code} db/tx*]}))
+
+    (it "joins room if non-blank nickname"
+      (reset! state/nickname "Hello")
+      (load-room! @ds/firelink)
+      (should-have-invoked :ws/call! {:with [:room/join
+                                             {:nickname "Hello" :room-code ds/firelink-code}
+                                             occupant/receive-join!]}))
+
+    (it "doesn't join room if blank nickname"
+      (reset! state/nickname " ")
+      (load-room! @ds/firelink)
+      (should-not-have-invoked :ws/call! {:with [:room/join
+                                                 {:nickname " " :room-code ds/firelink-code}
+                                                 occupant/receive-join!]}))
+
+    (it "deletes rooms"
+      (load-room! @ds/firelink)
+      (should= [] (db/find :room)))
+
+    (it "deletes games"
+      (load-room! @ds/firelink)
+      (should= [] (db/find :game))))
+
+  (context "on exit"
+    (before (page/exiting! :room))
+
+    (it "calls room/leave"
+      (should-have-invoked :ws/call! {:with [:room/leave {} ccc/noop]}))
+
+    (it "resets room-state"
+      (should= {} @sut/room-state)))
 
   (context "maybe not found"
     (it "renders not found if no room"

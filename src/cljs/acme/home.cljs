@@ -9,14 +9,12 @@
             [acme.state :as state]
             [acme.page :as page]))
 
-(defn join-room! [[code]]
-  (ws/call! :room/join {:nickname @state/nickname :room-code code}
-            occupant/receive-join!)
+(defn navigate-to-room! [[code]]
   (accountant/navigate! (str "/room/" code)))
 
 (defn- create-room! [nickname]
   (when (not (str/blank? nickname))
-    (ws/call! :room/create {:nickname nickname} join-room!)))
+    (ws/call! :room/create {:nickname nickname} navigate-to-room!)))
 
 (defn home [nickname-ratom]
   [:div.homepage-container
