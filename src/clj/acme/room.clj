@@ -1,10 +1,10 @@
 (ns acme.room
   (:require [c3kit.bucket.api :as db]
             [c3kit.wire.apic :as apic]
-    ;[acme.categories :as categories]
             [acme.dispatch :as dispatch]
             [acme.occupantc :as occupantc]
-            [acme.roomc :as roomc]))
+            [acme.roomc :as roomc]
+            [acme.gamec :as gamec]))
 
 (def lock (Object.))
 (defmacro with-lock [& body]
@@ -32,7 +32,7 @@
 (defn ws-create-room [{:keys [params] :as request}]
   (with-lock
     (let [code (unused-code)]
-      (roomc/create-room! code)
+      (gamec/create-game! (roomc/create-room! code))
       (apic/ok [code]))))
 
 (defn maybe-missing-room [{:keys [room-code] :as params}]

@@ -29,7 +29,8 @@
       (let [response (sut/ws-create-room {})
             room     (roomc/by-code "89ABCD")]
         (should= :ok (:status response))
-        (should= ["89ABCD"] (:payload response))))
+        (should= ["89ABCD"] (:payload response))
+        (should= 0 (:counter (db/ffind-by :game :room (:id room))))))
 
     (it "does not duplicate room codes"
       (db/tx (roomc/->room "89ABCD"))
