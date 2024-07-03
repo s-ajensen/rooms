@@ -8,8 +8,7 @@
             [c3kit.wire.jwt :as jwt]
             [c3kit.wire.websocket :as ws]
             [clojure.string :as str]
-            [ring.util.response :as response])
-  (:import (org.mindrot.jbcrypt BCrypt)))
+            [ring.util.response :as response]))
 
 (defn ajax-csrf-token [request]
   (let [{:keys [client-id]} (:jwt/payload request)]
@@ -17,8 +16,6 @@
          :anti-forgery-token client-id}
       ajax/ok
       (jwt/copy-payload request))))
-
-(defn check-password [password hash] (BCrypt/checkpw password hash))
 
 (defn websocket-open [request]
   (ws/handler request {:read-csrf jwt/client-id}))
