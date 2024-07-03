@@ -12,7 +12,7 @@
             [acme.layout :as layout]
             [acme.routes :as router]
             [reagent.dom :as dom]
-            [acme.push-handler]
+            [acme.room]
             ))
 
 ;; MDM: Needed with advanced compilation so pages can load content

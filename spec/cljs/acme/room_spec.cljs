@@ -7,11 +7,13 @@
             [acme.init :as init]
             [acme.page :as page]
             [acme.room :as sut]
+            [acme.roomc :as roomc]
             [c3kit.wire.spec-helper :as wire]
             [c3kit.bucket.api :as db]
             [acme.state :as state]
             [acme.layout :as layout]
             [acme.routes :as routes]
+            [c3kit.wire.websocket :as ws]
             [speclj.stub :as stub]))
 
 (defn load-room! [{:keys [code] :as _room}]
@@ -137,4 +139,8 @@
           (should= "Patches" (wire/html (str "#-occupant-" (:id @ds/patches))))))
 
       (it "displays game"
-        (should-select "#-game-container")))))
+        (should-select "#-game-container"))))
+
+  (it "receives room update"
+    (ws/push-handler {:kind :room/update :params [(roomc/->room "Greetings")]})
+    (should-not-be-nil (db/ffind-by :room :code "Greetings"))))

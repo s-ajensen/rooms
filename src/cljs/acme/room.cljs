@@ -91,3 +91,6 @@
 
 (defmethod page/render :room [_]
   [maybe-not-found])
+
+(defmethod ws/push-handler :room/update [push]
+  (db/tx* (:params push)))
