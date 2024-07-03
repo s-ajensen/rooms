@@ -35,47 +35,20 @@
            :justify-content "center"
            }]
 
-[:.code-input {
-               :max-width "100px"
-               }]
-
-[:.small-button {
-                 :width "10px"
-                 :height "10px"
-                 }]
-
-[:.red-button {
-               :background-color "red"
-               }]
-
-[:.green-button {
-                 :background-color "green"
-               }]
-
-[:.gray-button {
-                :background-color "gray"
-               }]
-
-[:.no-margin {
-              :margin "0px"
-              }]
 
 [:.game-container
  {:padding "20px"
-  :background-color "#fffaf0" ;; Creamy white background
-  :border "2px solid #d2b48c" ;; Tan border
+  :border "2px solid"
   :border-radius "8px"
   :box-shadow "0 2px 5px rgba(0,0,0,0.2)"
   :max-width "600px"
-  :margin "20px"}] ;; Subtle shadow
+  :margin "20px"}]
 
 [:.user-list
- {;:padding "20px"
-  :background-color "#fffaf0" ;; Creamy white background
-  :border "2px solid #d2b48c" ;; Tan border
+ {:border "2px solid #d2b48c"
   :border-radius "8px"
   :box-shadow "0 2px 5px rgba(0,0,0,0.2)"
-  :width "200px" ;; Adjust width as needed
+  :width "200px"
   :margin "20px"
   :padding "10px"
   }]
@@ -88,9 +61,6 @@
 
 [:.categories-data
  {:font-size "18px"
-  :color "#800000"
-  :background-color "#fdf5e6" ;; Light, off-white background
   :padding "10px"
-  :border "1px solid #faebd7" ;; Very light tan border
   :border-radius "5px"}]
 ))
