@@ -1,6 +1,6 @@
 (ns acme.routes-spec
   (:require-macros [acme.spec-helperc :refer [it-routes]]
-                   [speclj.core :refer [around before context describe it should= stub with-stubs]])
+                   [speclj.core :refer [redefs-around around before context describe it should= stub with-stubs]])
   (:require [acme.page :as page]
             [acme.routes :as sut]
             [secretary.core :as secretary]
@@ -10,10 +10,10 @@
 (describe "Routes"
   (with-stubs)
   (before (page/clear!)
-    (secretary/reset-routes!)
-    (sut/app-routes))
+          (secretary/reset-routes!)
+          (sut/app-routes))
 
-  (around [it] (with-redefs [sut/load-page! (stub :load-page!)] (it)))
+  (redefs-around [sut/load-page! (stub :load-page!)])
 
   (it-routes "/" :home)
   (it-routes "/room/shrine" :room

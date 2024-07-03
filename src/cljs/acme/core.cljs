@@ -9,5 +9,3 @@
     (if (secretary/locate-route path)
       (accountant/navigate! path)
       (wjs/redirect! path))))
-
-(defn go-home! [] (goto! "/"))

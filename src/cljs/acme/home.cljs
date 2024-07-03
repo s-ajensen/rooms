@@ -1,8 +1,5 @@
 (ns acme.home
   (:require [accountant.core :as accountant]
-            [acme.occupant :as occupant]
-            [c3kit.apron.corec :as ccc]
-            [c3kit.bucket.api :as db]
             [c3kit.wire.js :as wjs]
             [c3kit.wire.websocket :as ws]
             [clojure.string :as str]

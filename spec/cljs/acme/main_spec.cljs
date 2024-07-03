@@ -1,6 +1,6 @@
 (ns acme.main-spec
   (:require-macros [c3kit.apron.log :refer [capture-logs]]
-                   [speclj.core :refer [around before context describe it should-have-invoked should-not-have-invoked should= stub with-stubs]])
+                   [speclj.core :refer [redefs-around around before context describe it should-have-invoked should-not-have-invoked should= stub with-stubs]])
   (:require [accountant.core :as accountant]
             [acme.config :as config]
             [acme.main :as sut]

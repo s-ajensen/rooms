@@ -42,7 +42,7 @@
   (init/install-legend!)
   (init/install-reagent-db-atom!)
   (init/configure-api!)
-  (let [{:keys [config user flash]} (utilc/<-transit payload-src)]
+  (let [{:keys [config flash]} (utilc/<-transit payload-src)]
     (load-config config)
     (run! flash/add! flash)
     (dispatch-and-render)

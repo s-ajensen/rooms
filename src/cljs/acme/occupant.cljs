@@ -1,7 +1,5 @@
 (ns acme.occupant
-  (:require [acme.occupantc :as occupantc]
-            [c3kit.apron.corec :as ccc]
-            [c3kit.bucket.api :as db]
+  (:require [c3kit.bucket.api :as db]
             [c3kit.wire.websocket :as ws]
             [reagent.core :as reagent]))
 

@@ -38,7 +38,7 @@
 (describe "Routes"
   (with-stubs)
   (before (reset! args :none))
-  (around [it] (with-redefs [c3kit.wire.api/version (constantly "fake-api-version")] (it)))
+  (redefs-around [c3kit.wire.api/version (constantly "fake-api-version")])
 
   ; Please keep these specs sorted alphabetically
 
