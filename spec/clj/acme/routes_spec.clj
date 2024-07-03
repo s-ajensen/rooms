@@ -51,6 +51,7 @@
   (test-webs :ws/close             acme.room/ws-leave-room)
   (test-webs :room/create          acme.room/ws-create-room)
   (test-webs :room/join            acme.room/ws-join-room)
+  (test-webs :room/leave           acme.room/ws-leave-room)
   (test-webs :room/fetch           acme.room/ws-fetch-room)
   (test-webs :game/fetch           acme.game/ws-fetch-game)
   (test-webs :game/inc-counter     acme.game/ws-inc-counter)
