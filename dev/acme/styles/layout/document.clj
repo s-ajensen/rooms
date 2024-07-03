@@ -22,7 +22,7 @@
   :margin "5px"
   :font-size "16px"
   :color "#333"
-  :border "1px solid #d2b48c"
+  :border "1px solid"
   :border-radius "4px"
   :text-align "center"}]
 
