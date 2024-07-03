@@ -39,4 +39,11 @@
         (db/clear)
         (should-be-nil (db/entity (:id lautrec)))
         (sut/receive-join! [lautrec])
-        (should-not-be-nil (db/entity (:id lautrec)))))))
+        (should-not-be-nil (db/entity (:id lautrec)))))
+
+    (it "install occupant"
+      (let [lautrec @ds/lautrec]
+        (db/clear)
+        (should-be-nil @sut/current)
+        (sut/receive-join! [lautrec])
+        (should= lautrec @sut/current)))))
