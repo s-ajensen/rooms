@@ -1,11 +1,8 @@
 (ns acme.room-spec
   (:require-macros [speclj.core :refer [redefs-around around stub should-have-invoked should-not-have-invoked with-stubs describe context it should= should-be-nil should-contain should should-not before should-not-be-nil]]
                    [c3kit.wire.spec-helperc :refer [should-not-select should-select]])
-  (:require [accountant.core :as accountant]
-            [acme.occupant :as occupant]
+  (:require [acme.occupant :as occupant]
             [c3kit.apron.corec :as ccc]
-            [c3kit.wire.js :as wjs]
-            [reagent.core :as reagent]
             [acme.dark-souls :as ds]
             [acme.init :as init]
             [acme.page :as page]
@@ -14,10 +11,10 @@
             [c3kit.bucket.api :as db]
             [acme.state :as state]
             [acme.layout :as layout]
-            [c3kit.wire.websocket :as ws]
-            [acme.routes :as routes]))
+            [acme.routes :as routes]
+            [speclj.stub :as stub]))
 
-(defn load-room! [{:keys [code] :as room}]
+(defn load-room! [{:keys [code] :as _room}]
   (sut/install-room! code)
   (routes/load-page! :room)
   (wire/flush))
@@ -35,9 +32,6 @@
           (ds/init)
           (occupant/clear!)
           (wire/render [layout/default]))
-
-
-
 
   (context "on enter"
     (before (routes/load-page! nil))
@@ -97,8 +91,10 @@
         (should-not-select "#-room"))
 
       (it "renders room if nickname"
+        (stub/clear!)
         (occupant/install! @ds/frampt)
         (wire/flush)
+        (should-have-invoked :ws/call! {:with [:game/fetch nil db/tx]})
         (should-not-select "#-nickname-prompt")
         (should-select "#-room")))
 

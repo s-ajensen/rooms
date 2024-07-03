@@ -25,7 +25,7 @@
 
 (defn nickname-prompt [_]
   (let [local-nickname-ratom (reagent/atom nil)]
-    (fn [nickname-ratom]
+    (fn [_]
       [:div.center-div.margin-top-plus-5
        {:id "-nickname-prompt"}
        [:h1 "Enter nickname to join room..."]
@@ -42,7 +42,7 @@
 (defn- fetch-game []
   (ws/call! :game/fetch nil db/tx))
 
-(defn room-component [occupants-ratom]
+(defn room-component [_occupants-ratom]
   (reagent/create-class
     {:component-did-mount fetch-game
      :reagent-render
@@ -53,8 +53,7 @@
          [:br]
          [:br]
          [:h3 "Occupants"]
-         [:ul
-          (ccc/for-all [occupant @occupants-ratom]
+         [:ul (ccc/for-all [occupant @occupants-ratom]
             [:li {:key (:id occupant)
                   :id  (str "-occupant-" (:id occupant))}
              (:nickname occupant)])]]
@@ -77,9 +76,12 @@
 (defn- fetch-room []
   (ws/call! :room/fetch {:room-code @code} db/tx*))
 
-(defmethod page/entering! :room [_]
+(defn- clear-db! []
   (db/tx* (map db/soft-delete (db/find :room)))
-  (db/tx* (map db/soft-delete (db/find :game)))
+  (db/tx* (map db/soft-delete (db/find :game))))
+
+(defmethod page/entering! :room [_]
+  (clear-db!)
   (maybe-join-room! @state/nickname)
   (fetch-room))
 
