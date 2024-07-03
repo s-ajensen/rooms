@@ -16,6 +16,11 @@
             [c3kit.wire.websocket :as ws]
             [acme.routes :as routes]))
 
+(defn load-room! [{:keys [code] :as room}]
+  (sut/install-room! code)
+  (routes/load-page! :room)
+  (wire/flush))
+
 (describe "Room"
   (init/install-reagent-db-atom!)
   (init/install-legend!)
@@ -28,59 +33,75 @@
           (db/clear)
           (ds/init)
           (occupant/clear!)
-          (sut/install-room! (:code @ds/firelink))
-          (routes/load-page! :room)
           (wire/render [layout/default]))
 
 
   (it "fetches room on enter"
+    (load-room! @ds/firelink)
     (should-have-invoked :ws/call! {:with [:room/fetch {:room-code ds/firelink-code} db/tx*]}))
 
-  (context "nickname prompt or room"
-    (it "renders nickname prompt if no nickname"
-      (should-select "#-nickname-prompt")
-      (should-not-select "#-room"))
-
-    (it "renders room if nickname"
-      (occupant/install! @ds/frampt)
+  (context "maybe not found"
+    (it "renders not found if no room"
+      (sut/install-room! nil)
       (wire/flush)
-      (should-not-select "#-nickname-prompt")
-      (should-select "#-room")))
+      (should-select "#-not-found"))
 
-  (context "nickname prompt"
-    (it "updates input on change"
-      (wire/change! "#-nickname-input" "Lautrec")
-      (should= "Lautrec" (wire/value "#-nickname-input"))
-      (wire/change! "#-nickname-input" "Patches")
-      (should= "Patches" (wire/value "#-nickname-input")))
+    (it "renders prompt or room if room"
+      (load-room! @ds/firelink)
+      (wire/flush)
+      (should-select "#-prompt-or-room")))
 
-    (context "button click"
-      (it "joins room"
+  (context "existing room"
+    (before (load-room! @ds/firelink))
+
+    (context "nickname prompt or room"
+      (it "renders nickname prompt if no nickname"
+        (should-select "#-nickname-prompt")
+        (should-not-select "#-room"))
+
+      (it "renders room if nickname"
+        (occupant/install! @ds/frampt)
+        (wire/flush)
+        (should-not-select "#-nickname-prompt")
+        (should-select "#-room")))
+
+    (context "nickname prompt"
+      (it "updates input on change"
         (wire/change! "#-nickname-input" "Lautrec")
-        (wire/click! "#-join-button")
-        (should-have-invoked :ws/call! {:with [:room/join
-                                               {:nickname "Lautrec" :room-code ds/firelink-code}
-                                               occupant/receive-join!]}))
+        (should= "Lautrec" (wire/value "#-nickname-input"))
+        (wire/change! "#-nickname-input" "Patches")
+        (should= "Patches" (wire/value "#-nickname-input")))
 
-      (it "doesn't join room if blank nickname"
-        (wire/change! "#-nickname-input" " ")
-        (wire/click! "#-join-button")
-        (should-not-have-invoked :ws/call!))))
+      (context "button click"
+        (it "joins room"
+          (wire/change! "#-nickname-input" "Lautrec")
+          (wire/click! "#-join-button")
+          (should-have-invoked :ws/call! {:with [:room/join
+                                                 {:nickname "Lautrec" :room-code ds/firelink-code}
+                                                 occupant/receive-join!]}))
 
-  (context "room"
-    (before (occupant/install! @ds/lautrec)
-            (wire/flush))
+        (it "doesn't join room if blank nickname"
+          (wire/change! "#-nickname-input" " ")
+          (wire/click! "#-join-button")
+          (should-not-have-invoked :ws/call!))))
 
-    (context "displays occupants"
+    (context "room"
+      (before (occupant/install! @ds/lautrec)
+              (wire/flush))
 
-      (it "with one occupant"
-        (let [lautrec @ds/lautrec]
-          (run! db/delete (db/find :occupant))
-          (db/tx lautrec)
-          (wire/flush)
-          (should= "Lautrec" (wire/html (str "#-occupant-" (:id lautrec))))))
+      (context "displays occupants"
 
-      (it "with multiple occupants"
-        (should= "Lautrec" (wire/html (str "#-occupant-" (:id @ds/lautrec-atom))))
-        (should= "Kingseeker Frampt" (wire/html (str "#-occupant-" (:id @ds/frampt-atom))))
-        (should= "Patches" (wire/html (str "#-occupant-" (:id @ds/patches))))))))
+        (it "with one occupant"
+          (let [lautrec @ds/lautrec]
+            (run! db/delete (db/find :occupant))
+            (db/tx lautrec)
+            (wire/flush)
+            (should= "Lautrec" (wire/html (str "#-occupant-" (:id lautrec))))))
+
+        (it "with multiple occupants"
+          (should= "Lautrec" (wire/html (str "#-occupant-" (:id @ds/lautrec-atom))))
+          (should= "Kingseeker Frampt" (wire/html (str "#-occupant-" (:id @ds/frampt-atom))))
+          (should= "Patches" (wire/html (str "#-occupant-" (:id @ds/patches))))))
+
+      (it "displays game"
+        (should-select "#-game-container")))))

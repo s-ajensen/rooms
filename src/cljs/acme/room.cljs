@@ -1,5 +1,6 @@
 (ns acme.room
-  (:require [c3kit.apron.corec :as ccc]
+  (:require [acme.game :as game]
+            [c3kit.apron.corec :as ccc]
             [c3kit.wire.js :as wjs]
             [c3kit.wire.websocket :as ws]
             [clojure.string :as str]
@@ -37,23 +38,30 @@
                   :on-click #(join-room! @local-nickname-ratom)}
          "Join"]]])))
 
+(defn- fetch-game []
+  (ws/call! :game/fetch nil db/tx))
+
 (defn room-component [occupants-ratom]
-  [:div.main-container
-   {:id "-room"}
-   [:div.left-container
-    [:br]
-    [:br]
-    [:h3 "Occupants"]
-    [:ul
-     (ccc/for-all [occupant @occupants-ratom]
-       [:li {:key (:id occupant)
-             :id  (str "-occupant-" (:id occupant))}
-        (:nickname occupant)])]]
-   [:div.center
-    [:div.game-container
-     [:h1 "acme"]
-     ; TODO - counter here
-     ]]])
+  (reagent/create-class
+    {:component-did-mount fetch-game
+     :reagent-render
+     (fn [occupants-ratom]
+       [:div.main-container
+        {:id "-room"}
+        [:div.left-container
+         [:br]
+         [:br]
+         [:h3 "Occupants"]
+         [:ul
+          (ccc/for-all [occupant @occupants-ratom]
+            [:li {:key (:id occupant)
+                  :id  (str "-occupant-" (:id occupant))}
+             (:nickname occupant)])]]
+        [:div.center
+         [:div.game-container
+          [:h1 "acme"]
+          (game/game)
+          ]]])}))
 
 (defn nickname-prompt-or-room [nickname-ratom]
   [:div {:id "-prompt-or-room"}
@@ -61,13 +69,16 @@
      [nickname-prompt nickname-ratom]
      [room-component occupants])])
 
+(defn maybe-not-found []
+  (if @room
+    [nickname-prompt-or-room occupant/nickname]
+    [:p#-not-found "Oops, that room was not found!"]))
+
 (defn- fetch-room []
-  (ws/call! :room/fetch
-            {:room-code @code}
-            db/tx*))
+  (ws/call! :room/fetch {:room-code @code} db/tx*))
 
 (defmethod page/entering! :room [_]
   (fetch-room))
 
 (defmethod page/render :room [_]
-  [nickname-prompt-or-room occupant/nickname])
+  [maybe-not-found])
