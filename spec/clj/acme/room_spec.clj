@@ -100,7 +100,13 @@
       (sut/ws-leave-room {:connection-id "conn-patches"})
       (should-have-invoked :push-to-occupants! {:with [(map db/entity (:occupants @firelink))
                                                      :room/update
-                                                     [@firelink]]})))
+                                                     [@firelink]]}))
+
+    (it "deletes room if last person leaves"
+      (sut/ws-leave-room {:connection-id "conn-patches"})
+      (sut/ws-leave-room {:connection-id "conn-frampt"})
+      (sut/ws-leave-room {:connection-id "conn-lautrec"})
+      (should-be-nil @ds/firelink)))
 
   (context "ws-fetch-room"
     (before (roomc/create-room! "depths"))

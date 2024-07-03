@@ -28,6 +28,9 @@
 (defn remove-occupant! [room occupant]
   (db/tx (remove-occupant room occupant)))
 
+(defn room-empty? [room]
+  (empty? (:occupants room)))
+
 (defn by-code [code]
   (db/ffind-by :room :code code))
 (defn by-occupant [occupant]

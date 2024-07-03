@@ -74,11 +74,14 @@
         (maybe-missing-nickname params)
         (assign-to-room! params connection-id))))
 
+(defn maybe-delete-room [room]
+  (when (roomc/room-empty? room) (db/delete room)))
+
 (defn ws-leave-room [{:keys [connection-id] :as _request}]
   (with-lock
     (when-let [occupant (occupantc/by-conn-id connection-id)]
       (let [room (roomc/by-occupant occupant)
             room (roomc/remove-occupant! room occupant)]
         (push-room! room)
-        (roomc/remove-occupant! room occupant)
-        (db/delete occupant)))))
+        (db/delete occupant)
+        (maybe-delete-room room)))))
