@@ -11,7 +11,7 @@
 
 (defn game []
   [:div#-game-container
-   [:p#-counter (:counter @current)]
+   [:p#-counter.text-align-center (:counter @current)]
    [:button#-inc-btn
     {:on-click #(ws/call! :game/inc-counter [] ccc/noop)}
     "Click me!"]])
