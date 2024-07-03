@@ -17,14 +17,16 @@
   [:div.homepage-container
    [:h1 "Welcome to acme"]
    [:div.nickname-input
-    [:input {:type "text"
-             :id "-nickname-input"
-             :placeholder "Enter your nickname"
-             :value @nickname-ratom
-             :on-change #(reset! nickname-ratom (wjs/e-text %))}]]
+    [:input
+     {:type        "text"
+      :id          "-nickname-input"
+      :placeholder "Enter your nickname"
+      :value       @nickname-ratom
+      :on-change   #(reset! nickname-ratom (wjs/e-text %))}]]
    [:div.room-actions
-    [:button {:id       "-create-room-button"
-              :on-click #(create-room! @nickname-ratom)}
+    [:button
+     {:id       "-create-room-button"
+      :on-click #(create-room! @nickname-ratom)}
      "Create Room"]]])
 
 (defmethod page/render :home [_]
