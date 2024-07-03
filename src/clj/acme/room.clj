@@ -83,4 +83,5 @@
       (let [room (roomc/by-occupant occupant)
             room (roomc/remove-occupant! room occupant)]
         (push-room! room)
-        (roomc/remove-occupant! room occupant)))))
+        (roomc/remove-occupant! room occupant)
+        (db/delete occupant)))))

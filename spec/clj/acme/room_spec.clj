@@ -94,6 +94,10 @@
       (should-not-contain (:id @patches) (:occupants @firelink))
       (should= (mapv :id [@lautrec @frampt]) (:occupants @firelink)))
 
+    (it "removes occupant from db"
+      (sut/ws-leave-room {:connection-id "conn-patches"})
+      (should-be-nil (occupantc/by-conn-id "conn-patches")))
+
     (it "notifies occupants of new room state"
       (sut/ws-leave-room {:connection-id "conn-patches"})
       (should-have-invoked :push-to-occupants! {:with [(map db/entity (:occupants @firelink))
