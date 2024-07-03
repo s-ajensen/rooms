@@ -58,6 +58,7 @@
    :room/create         'acme.room/ws-create-room
    :room/join           'acme.room/ws-join-room
    :room/fetch          'acme.room/ws-fetch-room
+   :game/fetch          'acme.game/ws-fetch-game
    :game/inc-counter    'acme.game/ws-inc-counter
    })
 

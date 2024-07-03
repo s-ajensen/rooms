@@ -10,6 +10,27 @@
   (with-stubs)
   (ds/init-with-schemas)
 
+  (context "ws-fetch-game"
+
+    (context "failure"
+
+      (it "if occupant not found"
+        (let [response (sut/ws-fetch-game {:connection-id "blah"})]
+          (should= :fail (:status response))
+          (should= "Occupant not found" (apic/flash-text response 0))))
+
+      (it "if room not found"
+        (let [response (sut/ws-fetch-game {:connection-id (:conn-id @ds/laurentius)})]
+          (should= :fail (:status response))
+          (should= "Room not found" (apic/flash-text response 0)))))
+
+    (context "success"
+
+      (it "sends game"
+        (let [response (sut/ws-fetch-game {:connection-id (:conn-id @ds/lautrec)})]
+          (should= :ok (:status response))
+          (should= @ds/dark-souls (:payload response))))))
+
   (context "ws-inc-counter"
 
     (context "failure"

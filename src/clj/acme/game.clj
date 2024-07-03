@@ -20,6 +20,14 @@
 (defn by-room [room]
   (db/ffind-by :game :room (:id room room)))
 
+(defn ws-fetch-game [{:keys [connection-id] :as _request}]
+  (let [occupant (occupantc/by-conn-id connection-id)
+        room (roomc/by-occupant occupant)
+        game (by-room room)]
+    (or (maybe-occupant-not-found occupant)
+        (maybe-room-not-found room)
+        (apic/ok game))))
+
 (defn inc-counter! [game]
   (db/tx (update game :counter inc)))
 
