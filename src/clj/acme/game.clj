@@ -1,6 +1,5 @@
 (ns acme.game
-  (:require [acme.dispatch :as dispatch]
-            [acme.occupantc :as occupantc]
+  (:require [acme.occupantc :as occupantc]
             [acme.room :as room]
             [acme.roomc :as roomc]
             [c3kit.bucket.api :as db]

@@ -31,5 +31,4 @@
     (should-not-select ".site-spinner")
     (swap! ajax/active-ajax-requests inc)
     (wire-helper/flush)
-    (should-select ".site-spinner"))
-  )
+    (should-select ".site-spinner")))

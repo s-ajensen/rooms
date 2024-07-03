@@ -19,12 +19,10 @@
                                                   (nth coll @idx))})])
 
   (context "room id"
-
     (it "random 6 numbers/letters"
       (should= "89ABCD" (sut/new-code))))
 
   (context "ws-create-room"
-
     (it "success"
       (let [response (sut/ws-create-room {})
             room     (roomc/by-code "89ABCD")]

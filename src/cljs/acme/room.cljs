@@ -30,13 +30,15 @@
        {:id "-nickname-prompt"}
        [:h1 "Enter nickname to join room..."]
        [:div.center
-        [:input {:type "text"
-                 :id "-nickname-input"
-                 :placeholder "Enter your nickname"
-                 :value @local-nickname-ratom
-                 :on-change #(reset! local-nickname-ratom (wjs/e-text %))}]
-        [:button {:id "-join-button"
-                  :on-click #(maybe-join-room! @local-nickname-ratom)}
+        [:input
+         {:type "text"
+          :id "-nickname-input"
+          :placeholder "Enter your nickname"
+          :value @local-nickname-ratom
+          :on-change #(reset! local-nickname-ratom (wjs/e-text %))}]
+        [:button
+         {:id "-join-button"
+          :on-click #(maybe-join-room! @local-nickname-ratom)}
          "Join"]]])))
 
 (defn- fetch-game []
@@ -54,8 +56,9 @@
          [:br]
          [:h3 "Occupants"]
          [:ul (ccc/for-all [occupant @occupants-ratom]
-            [:li {:key (:id occupant)
-                  :id  (str "-occupant-" (:id occupant))}
+            [:li
+             {:key (:id occupant)
+              :id  (str "-occupant-" (:id occupant))}
              (:nickname occupant)])]]
         [:div.center
          [:div.game-container

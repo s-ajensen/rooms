@@ -28,7 +28,6 @@
 
 
   (context "transition"
-
     (before (sut/clear!)
       (reset! transition-events []))
 
@@ -45,8 +44,4 @@
     (it "doesn't enter or exit when transitioning to same page"
       (sut/install-page! :page.spec/test-page)
       (sut/transition :page.spec/test-page)
-      (should= [:reentered] @transition-events))
-
-    )
-
-  )
+      (should= [:reentered] @transition-events))))

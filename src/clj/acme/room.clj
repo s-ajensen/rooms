@@ -26,23 +26,20 @@
        (remove #(db/ffind-by :room :code %))
        first))
 
-(defn categories []
-  (shuffle []))
-
-(defn ws-create-room [{:keys [params] :as request}]
+(defn ws-create-room [_request]
   (with-lock
     (let [code (unused-code)]
       (gamec/create-game! (roomc/create-room! code))
       (apic/ok [code]))))
 
-(defn maybe-missing-room [{:keys [room-code] :as params}]
+(defn maybe-missing-room [{:keys [room-code] :as _params}]
   (when-not room-code (apic/fail nil "Missing room!")))
 (defn maybe-nonexistent-room [room]
   (when-not room (apic/fail nil "Room does not exist!")))
 (defn maybe-missing-nickname [{:keys [nickname] :as params}]
   (when-not nickname (apic/fail nil "Missing nickname!")))
 
-(defn ws-fetch-room [{:keys [params] :as request}]
+(defn ws-fetch-room [{:keys [params] :as _request}]
   (let [room (db/ffind-by :room :code (:room-code params))
         occupants (map db/entity (:occupants room))]
     (or (maybe-missing-room params)
@@ -71,13 +68,13 @@
     (or (maybe-nonexistent-room room)
         (create-and-join! room nickname connection-id))))
 
-(defn ws-join-room [{:keys [params connection-id] :as request}]
+(defn ws-join-room [{:keys [params connection-id] :as _request}]
   (with-lock
     (or (maybe-missing-room params)
         (maybe-missing-nickname params)
         (assign-to-room! params connection-id))))
 
-(defn ws-leave-room [{:keys [connection-id] :as request}]
+(defn ws-leave-room [{:keys [connection-id] :as _request}]
   (with-lock
     (when-let [occupant (occupantc/by-conn-id connection-id)]
       (let [room (roomc/by-occupant occupant)

@@ -11,13 +11,11 @@
   (ds/init-with-schemas)
 
   (context "create-room!"
-
     (it "assigns code"
       (sut/create-room! ds/firelink-code)
       (should= ds/firelink-code (:code (db/ffind-by :room :code ds/firelink-code)))))
 
   (context "add-occupant"
-
     (it "to empty room"
       (let [room (sut/add-occupant {:occupants []} {:id 123})]
         (should= [123] (:occupants room))))
@@ -31,7 +29,6 @@
         (should= [123 124 125] (:occupants room)))))
 
   (context "join-room!"
-
     (it "stores users who have joined in order"
       (sut/add-occupant! @depths @laurentius)
       (sut/add-occupant! @depths @frampt)
@@ -39,7 +36,6 @@
       (should= (mapv :id [@laurentius @frampt @patches]) (:occupants @depths))))
 
   (context "remove-occupant"
-
     (it "from empty room"
       (let [room (sut/remove-occupant {:occupants []} {:id 123})]
         (should= [] (:occupants room))))
@@ -53,7 +49,6 @@
         (should= [124 125] (:occupants room)))))
 
   (context "remove-occupant!"
-
     (it "removes occupant from room"
       (sut/remove-occupant! @firelink @patches)
       (should-not-contain (:id @patches) (:occupants @firelink))))

@@ -1,6 +1,5 @@
 (ns acme.spec-helper
-  (:require [c3kit.bucket.api :as db]
-            [acme.init :as init]
+  (:require [acme.init :as init]
             [c3kit.apron.log :as log]
             [speclj.core :refer :all]))
 

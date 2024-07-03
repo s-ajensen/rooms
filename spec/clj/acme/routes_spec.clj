@@ -58,6 +58,4 @@
 
   (it "not-found global - nil - handled by http"
     (let [response (routes/handler {:uri "/blah" :request-method :get})]
-      (should-be-nil response)))
-
-  )
+      (should-be-nil response))))

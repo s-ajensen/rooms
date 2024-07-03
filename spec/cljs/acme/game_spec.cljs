@@ -4,17 +4,12 @@
   (:require [acme.dark-souls :as ds]
             [acme.game :as sut]
             [acme.init :as init]
-            [acme.layout :as layout]
-            [acme.occupant :as occupant]
-            [acme.room :as room]
-            [acme.routes :as routes]
             [c3kit.apron.corec :as ccc]
             [c3kit.bucket.api :as db]
             [c3kit.wire.spec-helper :as wire]
             [c3kit.wire.websocket :as ws]))
 
 (describe "Game"
-
   (init/install-reagent-db-atom!)
   (init/install-legend!)
   (init/configure-api!)

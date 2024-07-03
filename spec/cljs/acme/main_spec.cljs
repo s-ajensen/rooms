@@ -27,7 +27,6 @@
       (should-have-invoked :dispatch-current!)))
 
   (context "main"
-
     (around [it]
       (with-redefs [sut/dispatch-and-render (stub :dispatch-and-render)
                     log/all! (stub :all!)]
@@ -41,6 +40,4 @@
 
     (it "installs config"
       (sut/main (util/->transit {:config {:environment "blah"}}))
-      (should= "blah" @config/environment))
-    )
-  )
+      (should= "blah" @config/environment))))

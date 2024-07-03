@@ -29,7 +29,6 @@
         (should-have-invoked :ws/push! {:with ["conn-lautrec" :some/method [@firelink]]})))
 
     (context "to members"
-
       (it "no connections"
         (with-redefs [ws/connected-ids (fn [] [])]
           @(sut/push-to-occupants! [@lautrec] :some/method [@firelink])

@@ -34,8 +34,8 @@
 
 (defmethod entering! :default [_])
 (defmethod exiting! :default [_])
-(defmethod reentering! :default [page])
-(defmethod title :default [page] "acme")
+(defmethod reentering! :default [_page])
+(defmethod title :default [_page] "acme")
 
 (defn transition [page]
   (let [current-page (:page @state)]

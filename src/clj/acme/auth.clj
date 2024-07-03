@@ -1,14 +1,7 @@
 (ns acme.auth
-  (:require [c3kit.apron.corec :as ccc]
-            [c3kit.apron.legend :as legend]
-            [c3kit.bucket.api :as db]
-            [c3kit.wire.ajax :as ajax]
-            [c3kit.wire.apic :as apic]
-            [c3kit.wire.flash :as flash]
+  (:require [c3kit.wire.ajax :as ajax]
             [c3kit.wire.jwt :as jwt]
-            [c3kit.wire.websocket :as ws]
-            [clojure.string :as str]
-            [ring.util.response :as response]))
+            [c3kit.wire.websocket :as ws]))
 
 (defn ajax-csrf-token [request]
   (let [{:keys [client-id]} (:jwt/payload request)]

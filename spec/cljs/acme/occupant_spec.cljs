@@ -1,6 +1,5 @@
 (ns acme.occupant-spec
-  (:require-macros [speclj.core :refer [redefs-around around stub should-have-invoked should-not-have-invoked with-stubs describe context it should= should-be-nil should-contain should should-not before should-not-be-nil]]
-                   [c3kit.wire.spec-helperc :refer [should-not-select should-select]])
+  (:require-macros [speclj.core :refer [redefs-around around stub should-have-invoked should-not-have-invoked with-stubs describe context it should= should-be-nil should-contain should should-not before should-not-be-nil]])
   (:require [acme.dark-souls :as ds]
             [acme.init :as init]
             [acme.occupant :as sut]
@@ -15,7 +14,6 @@
   (before (ds/init))
 
   (context "installs"
-
     (it "frampt"
       (sut/install! @ds/frampt)
       (should= @ds/frampt @sut/current)

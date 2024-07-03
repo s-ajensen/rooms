@@ -1,6 +1,6 @@
 (ns acme.occupantc_spec
   (:require [acme.occupantc :as sut]
-            [acme.dark-souls :as ds :refer [lautrec]]
+            [acme.dark-souls :as ds]
             [speclj.core #?(:clj :refer :cljs :refer-macros) [describe context it should=]]))
 
 (describe "occupantc"
@@ -12,7 +12,6 @@
       (should= "conn-id" (:conn-id occupant))))
 
   (context "create-occupant!"
-
     (it "assigns nickname"
       (sut/create-occupant! "Solaire")
       (should= "Solaire" (:nickname (sut/by-nickname "Solaire"))))
@@ -22,7 +21,6 @@
       (should= "conn-solaire" (:conn-id (sut/by-nickname "Solaire")))))
 
   (context "or-id"
-
     (it "occupant"
       (should= 123 (sut/or-id {:id 123})))
 

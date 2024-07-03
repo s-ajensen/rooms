@@ -22,13 +22,7 @@
             [:title (title options)]
             [:meta {:charset "utf-8"}]
             [:meta {:name "viewport" :content "width=device-width, initial-scale=1.0, minimum-scale=1.0"}]
-            [:link {:rel "icon" :sizes "16x16" :type "image/png" :href "/images/favicons/favicon-16x16.png"}]
-            [:link {:rel "icon" :sizes "32x32" :type "image/png" :href "/images/favicons/favicon-32x32.png"}]
-            [:link {:rel "icon" :sizes "192x192" :type "image/png" :href "/images/favicons/favicon-192x192.png"}]
-            [:link {:rel "icon" :sizes "512x512" :type "image/png" :href "/images/favicons/favicon-512x512.png"}]
-            [:link {:rel "apple-touch-icon" :sizes "180x180" :href "/images/favicons/apple-touch-icon.png"}]
             [:link {:rel "manifest" :href "/images/favicons/site.webmanifest"}]
-            [:script {:src "https://kit.fontawesome.com/982c21555a.js" :crossorigin "anonymous"}]
             (if config/development?
               (list
                 (page/include-js "/cljs/goog/base.js")
@@ -37,7 +31,6 @@
             (:head options)                                 ;; MDM - must go after js so we can include js-fns, and before css, so we can override styles as needed
             (page/include-css (add-fingerprint (or (:css options) "/css/acme.css")))]
            [:body body]))
-
        (response/content-type "text/html")
        (response/charset "UTF-8"))))
 
@@ -77,7 +70,6 @@
             :api-version        (api/version)
             :environment        config/environment
             :google-client-id   (-> config/env :google-oauth :client-id)
-            :acme-root          (-> config/env :cleancoders-auth :url-root)
             :host               config/host
             }})
 

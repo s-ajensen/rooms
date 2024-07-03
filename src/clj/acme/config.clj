@@ -19,20 +19,18 @@
 (def staging
   (assoc base
     :database bucket
-    :host "https://acme-staging.cleancoders.com"
+    :host "https://acme-staging.com"
     :log-level :trace
     :jwt-secret "ACME_STAGING_SECRET"))
 
 (def production
   (assoc base
     :database bucket
-    :host "https://acme.cleancoders.com"
-    :analytics-code "console.log('Replace me with Real Google Analytics Code.');"
+    :host "https://acme.com"
     :jwt-secret "ACME_PRODUCTION_SECRET"))
 
-(def environment (app/find-env "cc.env" "CC_ENV"))
+(def environment (app/find-env "acme.env" "ACME_ENV"))
 (def development? (= "development" environment))
-(def production? (= "production" environment))
 
 (def env
   (case environment
@@ -41,5 +39,3 @@
     development))
 
 (def host (:host env))
-
-(defn link [& parts] (apply str host parts))
