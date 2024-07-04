@@ -42,6 +42,7 @@
 
       (it "if game not found"
         (db/delete-all :game)
+        (db/delete-all :game-room)
         (let [response (sut/ws-inc-counter {:connection-id (:conn-id @ds/lautrec)})]
           (should= :fail (:status response))
           (should= "Game not found" (apic/flash-text response 0)))))

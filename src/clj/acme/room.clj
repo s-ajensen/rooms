@@ -4,7 +4,8 @@
             [acme.dispatch :as dispatch]
             [acme.occupantc :as occupantc]
             [acme.roomc :as roomc]
-            [acme.gamec :as gamec]))
+            [acme.gamec :as gamec]
+            [acme.game-roomc :as game-roomc]))
 
 (def lock (Object.))
 (defmacro with-lock [& body]
@@ -29,7 +30,7 @@
 (defn ws-create-room [_request]
   (with-lock
     (let [code (unused-code)]
-      (gamec/create-game! (roomc/create-room! code))
+      (game-roomc/create-game-room! code)
       (apic/ok [code]))))
 
 (defn maybe-missing-room [{:keys [room-code] :as _params}]

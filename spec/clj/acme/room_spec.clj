@@ -25,10 +25,11 @@
   (context "ws-create-room"
     (it "success"
       (let [response (sut/ws-create-room {})
-            room     (roomc/by-code "89ABCD")]
+            room (roomc/by-code "89ABCD")
+            game-room (db/ffind-by :game-room :room (:id room))]
         (should= :ok (:status response))
         (should= ["89ABCD"] (:payload response))
-        (should= 0 (:counter (db/ffind-by :game :room (:id room))))))
+        (should= 0 (:counter (db/entity (:game game-room))))))
 
     (it "does not duplicate room codes"
       (db/tx (roomc/->room "89ABCD"))
@@ -71,16 +72,16 @@
     (it "notifies occupants of new room state"
       (let [response (sut/ws-join-room {:params        {:nickname "Giant Crow" :room-code ds/firelink-code}
                                         :connection-id "conn-crow"})
-            crow     (occupantc/by-nickname "Giant Crow")]
+            crow (occupantc/by-nickname "Giant Crow")]
         (should= :ok (:status response))
         (should-have-invoked :push-to-occupants! {:with [(map db/entity (:occupants @firelink))
-                                                       :room/update
-                                                       [@firelink crow]]})))
+                                                         :room/update
+                                                         [@firelink crow]]})))
 
     (it "responds with current room state & all current occupants"
       (let [response (sut/ws-join-room {:params        {:nickname "Giant Crow" :room-code ds/firelink-code}
                                         :connection-id "conn-crow"})
-            crow     (occupantc/by-nickname "Giant Crow")]
+            crow (occupantc/by-nickname "Giant Crow")]
         (should= :ok (:status response))
         (should= (set [@firelink crow @lautrec @frampt @patches]) (set (:payload response))))))
 
@@ -99,8 +100,8 @@
     (it "notifies occupants of new room state"
       (sut/ws-leave-room {:connection-id "conn-patches"})
       (should-have-invoked :push-to-occupants! {:with [(map db/entity (:occupants @firelink))
-                                                     :room/update
-                                                     [@firelink]]}))
+                                                       :room/update
+                                                       [@firelink]]}))
 
     (it "deletes room if last person leaves"
       (sut/ws-leave-room {:connection-id "conn-patches"})

@@ -1,5 +1,6 @@
 (ns acme.game
-  (:require [acme.occupantc :as occupantc]
+  (:require [acme.gamec :as gamec]
+            [acme.occupantc :as occupantc]
             [acme.room :as room]
             [acme.roomc :as roomc]
             [c3kit.bucket.api :as db]
@@ -16,13 +17,10 @@
   (when-not game
     (apic/fail {} "Game not found")))
 
-(defn by-room [room]
-  (db/ffind-by :game :room (:id room room)))
-
 (defn ws-fetch-game [{:keys [connection-id] :as _request}]
   (let [occupant (occupantc/by-conn-id connection-id)
         room (roomc/by-occupant occupant)
-        game (by-room room)]
+        game (gamec/by-room room)]
     (or (maybe-occupant-not-found occupant)
         (maybe-room-not-found room)
         (apic/ok game))))
@@ -37,7 +35,7 @@
 (defn ws-inc-counter [{:keys [connection-id] :as _request}]
   (let [occupant (occupantc/by-conn-id connection-id)
         room (roomc/by-occupant occupant)
-        game (by-room room)]
+        game (gamec/by-room room)]
     (or (maybe-occupant-not-found occupant)
         (maybe-room-not-found room)
         (maybe-game-not-found game)

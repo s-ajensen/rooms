@@ -41,7 +41,8 @@
   (reset! dark-souls-atom (db/tx {:kind :game :room (:id @firelink) :counter 0}))
   (roomc/add-occupant! @firelink @lautrec)
   (roomc/add-occupant! @firelink @frampt)
-  (roomc/add-occupant! @firelink @patches))
+  (roomc/add-occupant! @firelink @patches)
+  (db/tx {:kind :game-room :game (:id @dark-souls) :room (:id @firelink)}))
 
 (def memory-config {:impl :memory :store #?(:clj (atom nil) :cljs (reagent/atom nil))})
 

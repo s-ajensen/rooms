@@ -2,6 +2,7 @@
   (:require #?(:cljs [acme.core :as core])
             #?(:cljs [acme.page :as page])
             #?(:cljs [reagent.core :as reagent])
+            [acme.schema.game-room :as game-room]
             [c3kit.apron.legend :as legend]
             [c3kit.bucket.api :as db]
             [c3kit.bucket.memory]
@@ -16,6 +17,7 @@
   (legend/init! {:room       room/room
                  :occupant   occupant/occupant
                  :game       game/game
+                 :game-room  game-room/game-room
                  :db/retract legend/retract
                  }))
 
